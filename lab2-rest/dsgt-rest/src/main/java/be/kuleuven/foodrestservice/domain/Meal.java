@@ -11,6 +11,13 @@ public class Meal {
     protected String description;
     protected MealType mealType;
 
+    public Meal() {}
+    public Meal(String name, int kcal, double price) {
+        this.name = name;
+        this.kcal = kcal;
+        this.price = price;
+    }
+
     public String getId() {
         return id;
     }

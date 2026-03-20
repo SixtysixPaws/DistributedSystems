@@ -1,7 +1,6 @@
 package be.kuleuven.foodrestservice.controllers;
 
-import be.kuleuven.foodrestservice.domain.Meal;
-import be.kuleuven.foodrestservice.domain.MealsRepository;
+import be.kuleuven.foodrestservice.domain.*;
 import be.kuleuven.foodrestservice.exceptions.MealNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -48,4 +47,39 @@ public class MealsRestController {
                 linkTo(methodOn(MealsRestController.class).getMeals()).withRel("rest/meals"));
     }
 
+    @GetMapping("/rest/meals/cheapest")
+    public EntityModel<Meal> getCheapestMeal() {
+        Meal meal = mealsRepository.findCheapestMeal();
+        return mealToEntityModel(meal.getId(), meal);
+    }
+
+    @GetMapping("/rest/meals/largest")
+    public EntityModel<Meal> getLargestMeal() {
+        Meal meal = mealsRepository.findLargestMeal();
+        return mealToEntityModel(meal.getId(), meal);
+    }
+
+    @PostMapping("/rest/meals")
+    public EntityModel<Meal> addMeal(@RequestBody Meal meal) {
+        mealsRepository.addMeal(meal);
+        return mealToEntityModel(meal.getId(), meal);
+    }
+
+    @PutMapping("/rest/meals/{id}")
+    public EntityModel<Meal> updateMeal(@PathVariable String id, @RequestBody Meal meal) {
+        mealsRepository.updateMeal(id, meal);
+        return mealToEntityModel(id, meal);
+    }
+
+    @DeleteMapping("/rest/meals/{id}")
+    public void deleteMeal(@PathVariable String id) {
+        mealsRepository.deleteMeal(id);
+    }
+
+    @PostMapping("/rest/orders")
+    public EntityModel<OrderConfirmation> addOrder(@RequestBody Order order) {
+        OrderConfirmation confirmation = mealsRepository.processOrder(order);
+        return EntityModel.of(confirmation,
+                linkTo(methodOn(MealsRestController.class).getMeals()).withRel("all_meals"));
+    }
 }

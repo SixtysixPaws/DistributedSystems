@@ -54,4 +54,46 @@ public class MealsRepository {
     public Collection<Meal> getAllMeal() {
         return meals.values();
     }
+
+    public Optional<Meal> findMealByName(String name) {
+        return meals.values().stream()
+                .filter(m -> m.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
+
+    public OrderConfirmation processOrder(Order order) {
+        OrderConfirmation confirmation = new OrderConfirmation();
+        confirmation.setId(java.util.UUID.randomUUID().toString());
+        confirmation.setStatus("Order accepted for delivery to: " + order.getAddress());
+        return confirmation;
+    }
+
+
+    public void addMeal(Meal meal) {
+        if (meal.getId() == null || meal.getId().isEmpty()) {
+            meal.setId(java.util.UUID.randomUUID().toString());
+        }
+        meals.put(meal.getId(), meal);
+    }
+
+    public void updateMeal(String id, Meal meal) {
+        meal.setId(id);
+        meals.put(id, meal);
+    }
+
+    public void deleteMeal(String id) {
+        meals.remove(id);
+    }
+
+    public Meal findCheapestMeal() {
+        return meals.values().stream()
+                .min(java.util.Comparator.comparing(Meal::getPrice))
+                .orElseThrow(java.util.NoSuchElementException::new);
+    }
+
+    public Meal findLargestMeal() {
+        return meals.values().stream()
+                .max(java.util.Comparator.comparing(Meal::getKcal))
+                .orElseThrow(java.util.NoSuchElementException::new);
+    }
 }
