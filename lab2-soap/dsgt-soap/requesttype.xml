@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gs="http://foodmenu.io/gt/webservice">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <gs:getMealsByTypeRequest>
+            <gs:mealtype>meat</gs:mealtype>
+        </gs:getMealsByTypeRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
